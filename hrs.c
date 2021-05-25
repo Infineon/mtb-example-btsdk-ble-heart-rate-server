@@ -74,7 +74,7 @@
 #include "wiced_bt_gatt_util.h"
 #include "wiced_bt_cfg.h"
 #include "wiced_bt_uuid.h"
-#if !defined(CYW20735B1) && !defined(CYW20819A1) && !defined(CYW20719B2) && !defined(CYW20721B2)
+#if !defined(CYW20735B1) && !defined(CYW20835B1) && !defined(CYW20819A1) && !defined(CYW20719B2) && !defined(CYW20721B2)
 #include "wiced_bt_app_common.h"
 #endif
 #include "wiced_platform.h"
@@ -101,7 +101,7 @@ extern const wiced_bt_cfg_buf_pool_t wiced_app_cfg_buf_pools[];
 #define APP_BUTTON_SETTINGS         (WICED_GPIO_BUTTON_SETTINGS( GPIO_EN_INT_RISING_EDGE ))
 #define APP_BUTTON_DEFAULT_STATE    WICED_GPIO_BUTTON_DEFAULT_STATE
 #endif
-#if ( defined(CYW20719B1) || defined(CYW20721B1) || defined(CYW20735B1) || defined(CYW20819A1) )
+#if ( defined(CYW20719B1) || defined(CYW20721B1) || defined(CYW20735B1) || defined(CYW20835B1) || defined(CYW20819A1) )
 #define APP_BUTTON                  WICED_GPIO_PIN_BUTTON_1
 #endif
 
@@ -287,12 +287,12 @@ void hrs_application_init(void)
 #ifndef CYW43012C0
 static void hrs_interrput_config (void)
 {
-#if !defined(CYW20735B1) && !defined(CYW20819A1) && !defined(CYW20719B2) && !defined(CYW20721B2)
+#if !defined(CYW20735B1) && !defined(CYW20835B1) && !defined(CYW20819A1) && !defined(CYW20719B2) && !defined(CYW20721B2)
     wiced_bt_app_init();
 #endif
 
     /* Configure buttons available on the platform (pin should be configured before registering interrupt handler ) */
-#if ( defined(CYW20719B1) || defined(CYW20721B1) || defined(CYW20735B1) || defined(CYW20819A1) || defined(CYW20721B2) || defined(CYW20719B2) )
+#if ( defined(CYW20719B1) || defined(CYW20721B1) || defined(CYW20735B1) || defined(CYW20835B1) || defined(CYW20819A1) || defined(CYW20721B2) || defined(CYW20719B2) )
     /* Configure buttons available on the platform */
     wiced_platform_register_button_callback( WICED_PLATFORM_BUTTON_1, hrs_interrupt_handler, NULL, WICED_PLATFORM_BUTTON_BOTH_EDGE);
 #else
