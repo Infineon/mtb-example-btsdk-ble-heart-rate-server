@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2022, Cypress Semiconductor Corporation (an Infineon company) or
+ * Copyright 2016-2023, Cypress Semiconductor Corporation (an Infineon company) or
  * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
  *
  * This software, including source code, documentation and related
@@ -35,7 +35,7 @@
 *
 * Heart Rate Server (HRS) snippet application
 *
-* The HRS snippet application shows how to initialize and use WICED BT Heart Rate
+* The HRS snippet application shows how to initialize and use AIROC Bluetooth Heart Rate
 * Server library.This snippet implements GAP peripheral role. On application start,
 * calls HRS library APIs to register callbacks for receiving HRC requests. HRS allows a client
 * to register/un-register for notifications and to reset Energy expended values in the server.
@@ -54,12 +54,12 @@
 * Application sends heart rate notifications to HRC on every 1 minute, until HRC stops.
 
 * Features demonstrated
-*  - Initialize and use WICED BT HRS library
+*  - Initialize and use AIROC Bluetooth HRS library
 *  - GATTDB with Heart Rate notification service and characteristics, Device Information Service and characteristics
 *
 * To demonstrate the app, work through the following steps.
-* 1. Plug the WICED eval board into your computer
-* 2. Build and download the application (to the WICED board)
+* 1. Plug the AIROC eval board into your computer
+* 2. Build and download the application (to the AIROC board)
 * 3. Start tracing to monitor the activity (see Kit Guide for details)
 * 4. Application automatically enter to Limited GAP ADV mode.
 * 4. After connection with HRC, based on HRC request, start, stop Heart Rate notifications and
@@ -74,7 +74,7 @@
 #include "wiced_bt_gatt_util.h"
 #include "wiced_bt_cfg.h"
 #include "wiced_bt_uuid.h"
-#if !defined(CYW20735B1) && !defined(CYW20835B1) && !defined(CYW20819A1) && !defined(CYW20719B2) && !defined(CYW20721B2)
+#if !defined(CYW20835B1) && !defined(CYW20819A1) && !defined(CYW20719B2) && !defined(CYW20721B2)
 #include "wiced_bt_app_common.h"
 #endif
 #include "wiced_platform.h"
@@ -101,17 +101,12 @@ extern const wiced_bt_cfg_buf_pool_t wiced_app_cfg_buf_pools[];
 #define APP_BUTTON_SETTINGS         (WICED_GPIO_BUTTON_SETTINGS( GPIO_EN_INT_RISING_EDGE ))
 #define APP_BUTTON_DEFAULT_STATE    WICED_GPIO_BUTTON_DEFAULT_STATE
 #endif
-#if ( defined(CYW20719B1) || defined(CYW20721B1) || defined(CYW20735B1) || defined(CYW20835B1) || defined(CYW20819A1) )
+#if ( defined(CYW20719B1) || defined(CYW20721B1) || defined(CYW20835B1) || defined(CYW20819A1) )
 #define APP_BUTTON                  WICED_GPIO_PIN_BUTTON_1
 #endif
 
-#if ( defined(CYW20735B0) || defined(CYW20706A2) )
+#if ( defined(CYW20706A2) )
 #define APP_BUTTON                  WICED_GPIO_PIN_BUTTON
-#endif
-
-#if ( defined(CYW20735B0) || defined(CYW20719B0) )
-#define APP_BUTTON_SETTINGS         WICED_GPIO_BUTTON_SETTINGS
-#define APP_BUTTON_DEFAULT_STATE    GPIO_PIN_OUTPUT_LOW
 #endif
 
 #define HRS_HOST_INFO_VS_ID      WICED_NVRAM_VSID_START
@@ -199,7 +194,7 @@ const wiced_transport_cfg_t transport_cfg =
 /*
  * Entry point to the application. Set device configuration and start BT
  * stack initialization.  The actual application initialization will happen
- * when stack reports that BT device is ready
+ * when stack reports that Bluetooth device is ready
  */
 APPLICATION_START()
 {
@@ -223,7 +218,7 @@ APPLICATION_START()
     // Note: WICED HCI must be configured to use this - see wiced_trasnport_init(), must
     // be called with wiced_transport_cfg_t.wiced_tranport_data_handler_t callback present
     wiced_set_debug_uart(WICED_ROUTE_DEBUG_TO_PUART);
-#if ( defined(CYW20706A2) || defined(CYW20735B0) || defined(CYW20719B0) || defined(CYW43012C0) )
+#if ( defined(CYW20706A2) || defined(CYW43012C0) )
     wiced_hal_puart_select_uart_pads( WICED_PUART_RXD, WICED_PUART_TXD, 0, 0);
 #endif
 #endif
@@ -236,7 +231,7 @@ APPLICATION_START()
 }
 
 /*
- * HRS application initialization is executed after BT stack initialization is completed.
+ * HRS application initialization is executed after Bluetooth stack initialization is completed.
  */
 void hrs_application_init(void)
 {
@@ -287,12 +282,12 @@ void hrs_application_init(void)
 #ifndef CYW43012C0
 static void hrs_interrput_config (void)
 {
-#if !defined(CYW20735B1) && !defined(CYW20835B1) && !defined(CYW20819A1) && !defined(CYW20719B2) && !defined(CYW20721B2)
+#if !defined(CYW20835B1) && !defined(CYW20819A1) && !defined(CYW20719B2) && !defined(CYW20721B2)
     wiced_bt_app_init();
 #endif
 
     /* Configure buttons available on the platform (pin should be configured before registering interrupt handler ) */
-#if ( defined(CYW20719B1) || defined(CYW20721B1) || defined(CYW20735B1) || defined(CYW20835B1) || defined(CYW20819A1) || defined(CYW20721B2) || defined(CYW20719B2) )
+#if ( defined(CYW20719B1) || defined(CYW20721B1) || defined(CYW20835B1) || defined(CYW20819A1) || defined(CYW20721B2) || defined(CYW20719B2) )
     /* Configure buttons available on the platform */
     wiced_platform_register_button_callback( WICED_PLATFORM_BUTTON_1, hrs_interrupt_handler, NULL, WICED_PLATFORM_BUTTON_BOTH_EDGE);
 #else
@@ -531,7 +526,7 @@ wiced_bt_gatt_status_t hrs_gatts_req_read_handler(uint16_t conn_id, wiced_bt_gat
 {
     int          i, attr_len_to_copy;
 
-    /* WICED BT HRS library takes care HRS service characteristics read requests*/
+    /* AIROC Bluetooth HRS library takes care HRS service characteristics read requests*/
     if ( (p_data->handle >= HDLS_HRS) && ( p_data->handle <= HDLC_HRS_HEART_RATE_CONTROL_POINT_VALUE ) )
     {
         return wiced_bt_hrs_process_client_read_req (conn_id, p_data);
@@ -766,7 +761,7 @@ void heart_rate_notify_timeout(uint32_t arg)
         heart_rate_notification.energy_expended         = hrs_app_cb.energy_expended;
     }
 
-    //Todo Add RR intervals once wiced bt HRS supports RR intervals
+    //Todo Add RR intervals once Bluetooth HRS supports RR intervals
 
     status = wiced_bt_hrs_send_heart_rate( hrs_app_cb.conn_id, &heart_rate_notification );
     WICED_BT_TRACE("notify heart rate %d \n", status);
